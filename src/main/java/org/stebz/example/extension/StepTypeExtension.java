@@ -36,6 +36,11 @@ public class StepTypeExtension implements InterceptStep {
   }
 
   @Override
+  public int order() {
+    return DEFAULT_ORDER + 1;
+  }
+
+  @Override
   public StepObj<?> interceptStep(StepObj<?> step,
                                   NullableOptional<Object> context) {
     WithStepType withStepType = step.get(STEP_TYPE_ANNOTATION);
