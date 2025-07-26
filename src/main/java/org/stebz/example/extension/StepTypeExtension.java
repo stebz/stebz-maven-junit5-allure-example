@@ -21,42 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.stebz.example.allure.selenide.step;
+package org.stebz.example.extension;
 
-import org.stebz.annotation.Step;
-import org.stebz.example.allure.selenide.page.SinglePage;
-import org.stebz.example.extension.WithStepType;
-import org.stebz.step.executable.RunnableStep;
+import org.stebz.attribute.StepAttribute;
+import org.stebz.extension.InterceptStep;
+import org.stebz.step.StepObj;
+import org.stebz.util.container.NullableOptional;
 
-import static org.stebz.example.extension.StepType.WEB;
+public class StepTypeExtension implements InterceptStep {
+  public static final StepAttribute<StepType> STEP_TYPE = StepAttribute.nullable("extension:test_type");
+  private static final StepAttribute<WithStepType> STEP_TYPE_ANNOTATION = StepAttribute.nullable(WithStepType.KEY);
 
-public final class PageSteps {
-
-  private PageSteps() {
+  public StepTypeExtension() {
   }
 
-  // @formatter:off
-
-  @Step("user is authorized as {username} / {password}")
-  @WithStepType(WEB)
-  public static RunnableStep user_is_authorized_as(String username,
-                                                   String password) { return RunnableStep.of(() ->
-    new SinglePage()
-      .open_page()
-      .should_have_visible_username_field()
-      .should_have_visible_password_field()
-      .should_have_visible_login_button()
-      .type_username(username)
-      .type_password(password)
-      .click_on_login_button()
-  ); }
-
-  @Step
-  @WithStepType(WEB)
-  public static RunnableStep user_should_be_authorized() { return RunnableStep.of(() ->
-    new SinglePage()
-      .should_have_successful_login_message()
-  ); }
-
-  // @formatter:on
+  @Override
+  public StepObj<?> interceptStep(StepObj<?> step,
+                                  NullableOptional<Object> context) {
+    WithStepType withStepType = step.get(STEP_TYPE_ANNOTATION);
+    if (withStepType != null) {
+      return step.withName(withStepType.value() + ": " + step.getName())
+        .withAddedParam("step type", withStepType.value());
+    }
+    StepType stepType = step.get(STEP_TYPE);
+    if (stepType != null) {
+      return step.withName(stepType + ": " + step.getName())
+        .withAddedParam("step type", withStepType.value());
+    }
+    return step;
+  }
 }

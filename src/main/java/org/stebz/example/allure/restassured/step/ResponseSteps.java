@@ -27,9 +27,11 @@ import io.restassured.response.Response;
 import net.javacrumbs.jsonunit.core.Option;
 import org.stebz.annotation.WithName;
 import org.stebz.annotation.WithParams;
+import org.stebz.example.extension.WithStepType;
 import org.stebz.step.executable.ConsumerStep;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+import static org.stebz.example.extension.StepType.API;
 
 public final class ResponseSteps {
 
@@ -44,11 +46,13 @@ public final class ResponseSteps {
 
   @WithName("Response status code should be {statusCode}")
   @WithParams
+  @WithStepType(API)
   public static ConsumerStep<Response> responseStatusCodeIs(int statusCode) { return ConsumerStep.of(response ->
     response.then().statusCode(statusCode)
   ); }
 
   @WithName("Response body should be equal to expected")
+  @WithStepType(API)
   public static ConsumerStep<Response> responseBodyEqualsTo(String expected) { return ConsumerStep.of(response ->
     assertThatJson(response.body() == null ? "" : response.body().asString())
       .withOptions(Option.REPORTING_DIFFERENCE_AS_NORMALIZED_STRING)
@@ -57,6 +61,7 @@ public final class ResponseSteps {
   ); }
 
   @WithName("Response body should contain expected")
+  @WithStepType(API)
   public static ConsumerStep<Response> responseBodyContains(String expected) { return ConsumerStep.of(response ->
     assertThatJson(response.body() == null ? "" : response.body().asString())
       .withOptions(Option.REPORTING_DIFFERENCE_AS_NORMALIZED_STRING)

@@ -28,9 +28,12 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.stebz.annotation.WithName;
 import org.stebz.annotation.WithRetry;
+import org.stebz.example.extension.WithStepType;
 import org.stebz.step.executable.SupplierStep;
 
 import java.net.SocketTimeoutException;
+
+import static org.stebz.example.extension.StepType.API;
 
 public final class RequestSteps {
 
@@ -41,6 +44,7 @@ public final class RequestSteps {
 
   @WithName("Send GET /pet/{id} request")
   @WithRetry(count = 2, on = SocketTimeoutException.class)
+  @WithStepType(API)
   public static SupplierStep<Response> sendGetPetRequest(int id) { return SupplierStep.of(() ->
     RestAssured.given()
       .accept(ContentType.JSON)
@@ -49,6 +53,7 @@ public final class RequestSteps {
   ); }
 
   @WithName("Send POST /pet request")
+  @WithStepType(API)
   public static SupplierStep<Response> sendPostPetRequest(Object body) { return SupplierStep.of(() ->
     RestAssured.given()
       .accept(ContentType.JSON)

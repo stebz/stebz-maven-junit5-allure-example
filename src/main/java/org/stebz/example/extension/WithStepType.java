@@ -21,42 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.stebz.example.allure.selenide.step;
+package org.stebz.example.extension;
 
-import org.stebz.annotation.Step;
-import org.stebz.example.allure.selenide.page.SinglePage;
-import org.stebz.example.extension.WithStepType;
-import org.stebz.step.executable.RunnableStep;
+import org.stebz.annotation.StepAttributeAnnotation;
 
-import static org.stebz.example.extension.StepType.WEB;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public final class PageSteps {
+@Target({ElementType.FIELD, ElementType.METHOD, ElementType.CONSTRUCTOR})
+@Retention(RetentionPolicy.RUNTIME)
+@StepAttributeAnnotation(WithStepType.KEY)
+public @interface WithStepType {
+  String KEY = "extension:with_step_type";
 
-  private PageSteps() {
-  }
-
-  // @formatter:off
-
-  @Step("user is authorized as {username} / {password}")
-  @WithStepType(WEB)
-  public static RunnableStep user_is_authorized_as(String username,
-                                                   String password) { return RunnableStep.of(() ->
-    new SinglePage()
-      .open_page()
-      .should_have_visible_username_field()
-      .should_have_visible_password_field()
-      .should_have_visible_login_button()
-      .type_username(username)
-      .type_password(password)
-      .click_on_login_button()
-  ); }
-
-  @Step
-  @WithStepType(WEB)
-  public static RunnableStep user_should_be_authorized() { return RunnableStep.of(() ->
-    new SinglePage()
-      .should_have_successful_login_message()
-  ); }
-
-  // @formatter:on
+  StepType value();
 }

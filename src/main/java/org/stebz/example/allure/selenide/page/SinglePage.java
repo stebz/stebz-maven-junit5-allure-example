@@ -24,6 +24,7 @@
 package org.stebz.example.allure.selenide.page;
 
 import org.stebz.annotation.Step;
+import org.stebz.example.extension.WithStepType;
 
 import java.net.URL;
 
@@ -31,6 +32,7 @@ import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
+import static org.stebz.example.extension.StepType.WEB;
 
 public final class SinglePage {
 
@@ -38,48 +40,56 @@ public final class SinglePage {
   }
 
   @Step
+  @WithStepType(WEB)
   public SinglePage open_page() {
     open(getResource("auth_page.html"));
     return this;
   }
 
   @Step
+  @WithStepType(WEB)
   public SinglePage should_have_visible_username_field() {
     $("#username").shouldBe(visible);
     return this;
   }
 
   @Step
+  @WithStepType(WEB)
   public SinglePage type_username(String username) {
     $("#username").append(username);
     return this;
   }
 
   @Step
+  @WithStepType(WEB)
   public SinglePage should_have_visible_password_field() {
     $("#password").shouldBe(visible);
     return this;
   }
 
   @Step
+  @WithStepType(WEB)
   public SinglePage type_password(String username) {
     $("#password").append(username);
     return this;
   }
 
   @Step
+  @WithStepType(WEB)
   public SinglePage should_have_visible_login_button() {
     $("#login-button").shouldBe(visible);
     return this;
   }
 
   @Step
+  @WithStepType(WEB)
   public SinglePage click_on_login_button() {
     $("#login-button").click();
     return this;
   }
 
   @Step
+  @WithStepType(WEB)
   public SinglePage should_have_successful_login_message() {
     $("#message").shouldBe(visible, exactText("You are logged in"));
     return this;

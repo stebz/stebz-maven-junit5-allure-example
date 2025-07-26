@@ -21,42 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.stebz.example.allure.selenide.step;
+package org.stebz.example.extension;
 
-import org.stebz.annotation.Step;
-import org.stebz.example.allure.selenide.page.SinglePage;
-import org.stebz.example.extension.WithStepType;
-import org.stebz.step.executable.RunnableStep;
+import org.stebz.extension.InterceptStepException;
+import org.stebz.step.StepObj;
+import org.stebz.util.container.NullableOptional;
 
-import static org.stebz.example.extension.StepType.WEB;
+public class WrappingNonAssertionErrorsExtension implements InterceptStepException {
 
-public final class PageSteps {
-
-  private PageSteps() {
+  public WrappingNonAssertionErrorsExtension() {
   }
 
-  // @formatter:off
-
-  @Step("user is authorized as {username} / {password}")
-  @WithStepType(WEB)
-  public static RunnableStep user_is_authorized_as(String username,
-                                                   String password) { return RunnableStep.of(() ->
-    new SinglePage()
-      .open_page()
-      .should_have_visible_username_field()
-      .should_have_visible_password_field()
-      .should_have_visible_login_button()
-      .type_username(username)
-      .type_password(password)
-      .click_on_login_button()
-  ); }
-
-  @Step
-  @WithStepType(WEB)
-  public static RunnableStep user_should_be_authorized() { return RunnableStep.of(() ->
-    new SinglePage()
-      .should_have_successful_login_message()
-  ); }
-
-  // @formatter:on
+  @Override
+  public Throwable interceptStepException(StepObj<?> step,
+                                          NullableOptional<Object> context,
+                                          Throwable exception) {
+    if (exception instanceof AssertionError) {
+      return exception;
+    }
+    AssertionError assertionError = new AssertionError(exception.getMessage(), exception.getCause());
+    assertionError.setStackTrace(exception.getStackTrace());
+    return assertionError;
+  }
 }
