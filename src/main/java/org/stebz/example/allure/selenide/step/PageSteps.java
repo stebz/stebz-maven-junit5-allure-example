@@ -28,6 +28,7 @@ import org.stebz.example.allure.selenide.page.SinglePage;
 import org.stebz.example.extension.WithStepType;
 import org.stebz.step.executable.RunnableStep;
 
+import static org.stebz.aspect.StepCaptor.captured;
 import static org.stebz.example.extension.StepType.WEB;
 
 public final class PageSteps {
@@ -51,12 +52,14 @@ public final class PageSteps {
       .click_on_login_button()
   ); }
 
-  @Step
+  @Step("user should be authorized")
   @WithStepType(WEB)
-  public static RunnableStep user_should_be_authorized() { return RunnableStep.of(() ->
-    new SinglePage()
-      .should_have_successful_login_message()
-  ); }
+  public static RunnableStep user_should_be_authorized() {
+    final SinglePage page = new SinglePage();
+    return captured(page::should_have_visible_message, "You are logged in")
+      .withoutParam("message")
+      .noResult();
+  }
 
   // @formatter:on
 }

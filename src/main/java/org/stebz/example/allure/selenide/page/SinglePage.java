@@ -90,8 +90,8 @@ public final class SinglePage {
 
   @Step
   @WithStepType(WEB)
-  public SinglePage should_have_successful_login_message() {
-    $("#message").shouldBe(visible, exactText("You are logged in"));
+  public SinglePage should_have_visible_message(String message) {
+    $("#message").shouldBe(visible, exactText(message));
     return this;
   }
 
