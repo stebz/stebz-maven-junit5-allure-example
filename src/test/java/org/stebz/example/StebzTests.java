@@ -33,7 +33,7 @@ import static org.stebz.StebzMethods.step;
 import static org.stebz.example.step.Steps.generate_a_string_of_character;
 import static org.stebz.example.step.Steps.string_contains_only;
 import static org.stebz.example.step.Steps.string_has_size;
-import static org.stebz.example.step.Steps.waitForSeconds;
+import static org.stebz.example.step.Steps.wait_for_seconds;
 import static org.stebz.extension.HiddenStepsExtension.hiddenSteps;
 
 class StebzTests {
@@ -46,7 +46,7 @@ class StebzTests {
       step("Hidden step 2");
     });
     step("precondition step");
-    step(waitForSeconds(1));
+    step(wait_for_seconds(1));
   }
 
   @Step

@@ -38,12 +38,12 @@ public final class Steps {
   // @formatter:off
 
   @Step("wait for {duration} seconds")
-  public static RunnableStep waitForSeconds(long duration) {
-    return waitFor(Duration.ofSeconds(duration));
+  public static RunnableStep wait_for_seconds(long duration) {
+    return wait_for(Duration.ofSeconds(duration));
   }
 
   @Step("wait for {duration}")
-  public static RunnableStep waitFor(Duration duration) { return RunnableStep.of(() ->
+  public static RunnableStep wait_for(Duration duration) { return RunnableStep.of(() ->
     Thread.sleep(duration.toMillis())
   );}
 
