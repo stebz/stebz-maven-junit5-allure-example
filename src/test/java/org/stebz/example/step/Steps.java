@@ -30,6 +30,8 @@ import org.stebz.step.executable.SupplierStep;
 
 import java.time.Duration;
 
+import static org.stebz.step.StepObj.stepOf;
+
 public final class Steps {
 
   private Steps() {
@@ -43,13 +45,13 @@ public final class Steps {
   }
 
   @Step("wait for {duration}")
-  public static RunnableStep wait_for(Duration duration) { return RunnableStep.of(() ->
+  public static RunnableStep wait_for(Duration duration) { return stepOf(() ->
     Thread.sleep(duration.toMillis())
   );}
 
   @Step("generate a string from {character} of size {size}")
   public static SupplierStep<String> generate_a_string_of_character(char character,
-                                                                    int size) { return SupplierStep.of(() -> {
+                                                                    int size) { return stepOf(() -> {
     char[] array = new char[size];
     int pos = 0;
     while (pos < size) {
@@ -60,14 +62,14 @@ public final class Steps {
   });}
 
   @Step("string has size {size}")
-  public static ConsumerStep<String> string_has_size(int size) { return ConsumerStep.of(string -> {
+  public static ConsumerStep<String> string_has_size(int size) { return stepOf(string -> {
     if (string.length() != size) {
       throw new AssertionError("string size should be " + size + " but size is" + string.length());
     }
   });}
 
   @Step("string contains only {character} characters")
-  public static ConsumerStep<String> string_contains_only(char character) { return ConsumerStep.of(string -> {
+  public static ConsumerStep<String> string_contains_only(char character) { return stepOf(string -> {
     char[] chars = string.toCharArray();
     for (int idx = 0; idx < chars.length; idx++) {
       char currentChar = chars[idx];
